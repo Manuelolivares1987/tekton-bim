@@ -1,0 +1,6 @@
+Requirement already satisfied: reportlab in c:\users\manuel olivares\appdata\local\programs\python\python313\lib\site-packages (4.4.4)
+Requirement already satisfied: pillow>=9.0.0 in c:\users\manuel olivares\appdata\local\programs\python\python313\lib\site-packages (from reportlab) (11.3.0)
+Requirement already satisfied: charset-normalizer in c:\users\manuel olivares\appdata\local\programs\python\python313\lib\site-packages (from reportlab) (3.4.3)
+
+[notice] A new release of pip is available: 25.3 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip

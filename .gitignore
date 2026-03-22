@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.db
+uploads/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/dist-electron/
+frontend/out/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Electron
+frontend/release/
+
+# Build artifacts
+*.exe
+*.dmg
+*.AppImage
