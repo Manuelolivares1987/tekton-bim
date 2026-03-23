@@ -149,14 +149,19 @@ export function rebuildFraming(
 }
 
 function createFramingMesh(member: FramingMemberData): THREE.Mesh | null {
-  const rotY = backendRotToThreeY(member.panel_rotation_deg ?? 0);
-  const worldX = (member.world_x_mm ?? 0) * SCALE;
-  const worldY = (member.world_y_mm ?? 0) * SCALE;
-  const worldZ = (member.world_z_mm ?? 0) * SCALE;
+  const rotDeg = member.panel_rotation_deg ?? 0;
+  const rotY = backendRotToThreeY(rotDeg);
+  // Use the ORIGINAL angle (not negated) for position transform
+  // because the backend rotation_deg = atan2(dz, dx):
+  //   0° → along +X, 90° → along +Z
+  const posRad = (rotDeg * Math.PI) / 180;
+
+  const wallStartX = (member.world_x_mm ?? 0) * SCALE;
+  const wallStartY = (member.world_y_mm ?? 0) * SCALE;
+  const wallStartZ = (member.world_z_mm ?? 0) * SCALE;
 
   const isHorizontal = member.member_type.includes("plate") || member.member_type === "header";
 
-  // Geometry dimensions
   let geoW: number, geoH: number, geoD: number;
   if (isHorizontal) {
     geoW = member.length_mm * SCALE;
@@ -175,24 +180,24 @@ function createFramingMesh(member: FramingMemberData): THREE.Mesh | null {
   const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 0.82 });
   const mesh = new THREE.Mesh(geo, mat);
 
-  // Local position: center the member
-  let localX: number, localY: number;
+  // Compute center offset along wall axis
+  let localAlongMm: number, localUpMm: number;
   if (isHorizontal) {
-    localX = (member.position_x_mm + member.length_mm / 2) * SCALE;
-    localY = (member.position_y_mm + member.width_mm / 2) * SCALE;
+    localAlongMm = member.position_x_mm + member.length_mm / 2;
+    localUpMm = member.position_y_mm + member.width_mm / 2;
   } else {
-    localX = (member.position_x_mm + member.width_mm / 2) * SCALE;
-    localY = (member.position_y_mm + member.length_mm / 2) * SCALE;
+    localAlongMm = member.position_x_mm + member.width_mm / 2;
+    localUpMm = member.position_y_mm + member.length_mm / 2;
   }
 
-  // Transform to world using rotation
-  const cos = Math.cos(rotY);
-  const sin = Math.sin(rotY);
+  // Transform local offset to world XZ using wall direction (original angle)
+  const localM = localAlongMm * SCALE;
   mesh.position.set(
-    worldX + cos * localX,
-    worldY + localY,
-    worldZ + sin * localX,
+    wallStartX + Math.cos(posRad) * localM,
+    wallStartY + localUpMm * SCALE,
+    wallStartZ + Math.sin(posRad) * localM,
   );
+  // Visual rotation (negated for Three.js convention)
   mesh.rotation.y = rotY;
 
   // Thin edges

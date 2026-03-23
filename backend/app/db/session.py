@@ -13,7 +13,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 async def init_db():
+    import app.models.bim_mep  # noqa: F401
     import app.models.bim_panel  # noqa: F401
+    import app.models.bim_roof  # noqa: F401
     import app.models.bim_storey  # noqa: F401
     import app.models.bim_wall  # noqa: F401
     import app.models.bim_wall_opening  # noqa: F401

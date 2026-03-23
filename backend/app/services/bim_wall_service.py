@@ -201,9 +201,9 @@ class BimWallService:
                 "quantity": 1,
                 "panel_id": None,
                 "panel_label": wall.label,
-                "world_x_mm": wall.start_x_mm + cos_r * offset,
+                "world_x_mm": wall.start_x_mm,
                 "world_y_mm": panels[0].pos_y_mm if panels else 0,
-                "world_z_mm": wall.start_z_mm + sin_r * offset,
+                "world_z_mm": wall.start_z_mm,
                 "panel_rotation_deg": wall.rotation_deg,
             })
             offset += seg_len
@@ -251,9 +251,9 @@ class BimWallService:
                     "quantity": 1,
                     "panel_id": None,
                     "panel_label": wall.label,
-                    "world_x_mm": wall.start_x_mm + cos_r * offset,
+                    "world_x_mm": wall.start_x_mm,
                     "world_y_mm": panels[0].pos_y_mm if panels else 0,
-                    "world_z_mm": wall.start_z_mm + sin_r * offset,
+                    "world_z_mm": wall.start_z_mm,
                     "panel_rotation_deg": wall.rotation_deg,
                 })
                 offset += seg_len
@@ -277,9 +277,9 @@ class BimWallService:
                     "quantity": 1,
                     "panel_id": None,
                     "panel_label": wall.label,
-                    "world_x_mm": wall.start_x_mm + cos_r * end_offset,
+                    "world_x_mm": wall.start_x_mm,
                     "world_y_mm": panels[0].pos_y_mm if panels else 0,
-                    "world_z_mm": wall.start_z_mm + sin_r * end_offset,
+                    "world_z_mm": wall.start_z_mm,
                     "panel_rotation_deg": wall.rotation_deg,
                 })
 
@@ -307,9 +307,9 @@ class BimWallService:
                         "quantity": 1,
                         "panel_id": p1.id,
                         "panel_label": f"{p1.label}|{p2.label}",
-                        "world_x_mm": wall.start_x_mm + cos_r * panel_offset,
+                        "world_x_mm": wall.start_x_mm,
                         "world_y_mm": p1.pos_y_mm,
-                        "world_z_mm": wall.start_z_mm + sin_r * panel_offset,
+                        "world_z_mm": wall.start_z_mm,
                         "panel_rotation_deg": wall.rotation_deg,
                     })
                 elif JOINT_TYPE == "double_stud":
@@ -326,9 +326,9 @@ class BimWallService:
                             "quantity": 1,
                             "panel_id": p1.id,
                             "panel_label": f"{p1.label}|{p2.label}",
-                            "world_x_mm": wall.start_x_mm + cos_r * stud_off,
+                            "world_x_mm": wall.start_x_mm,
                             "world_y_mm": p1.pos_y_mm,
-                            "world_z_mm": wall.start_z_mm + sin_r * stud_off,
+                            "world_z_mm": wall.start_z_mm,
                             "panel_rotation_deg": wall.rotation_deg,
                         })
                 else:
@@ -344,9 +344,9 @@ class BimWallService:
                         "quantity": 2,
                         "panel_id": p1.id,
                         "panel_label": f"{p1.label}|{p2.label}",
-                        "world_x_mm": wall.start_x_mm + cos_r * panel_offset,
+                        "world_x_mm": wall.start_x_mm,
                         "world_y_mm": p1.pos_y_mm,
-                        "world_z_mm": wall.start_z_mm + sin_r * panel_offset,
+                        "world_z_mm": wall.start_z_mm,
                         "panel_rotation_deg": wall.rotation_deg,
                     })
 
@@ -372,12 +372,17 @@ class BimWallService:
             )
             # Only keep opening-specific members (not regular studs or plates)
             opening_member_types = {"king_stud", "jack_stud", "header", "sill_plate", "cripple_stud"}
+            # Recover panel's local offset along the wall axis from its world position
+            panel_local_offset = (
+                (panel.pos_x_mm - wall.start_x_mm) * cos_r
+                + (panel.pos_z_mm - wall.start_z_mm) * sin_r
+            )
             for m in members:
                 if m.member_type not in opening_member_types:
                     continue
                 framing.append({
                     "member_type": m.member_type,
-                    "position_x_mm": m.position_x_mm,
+                    "position_x_mm": panel_local_offset + m.position_x_mm,
                     "position_y_mm": m.position_y_mm,
                     "length_mm": m.length_mm,
                     "width_mm": m.width_mm,
@@ -386,10 +391,10 @@ class BimWallService:
                     "quantity": m.quantity,
                     "panel_id": panel.id,
                     "panel_label": panel.label,
-                    "world_x_mm": panel.pos_x_mm,
+                    "world_x_mm": wall.start_x_mm,
                     "world_y_mm": panel.pos_y_mm,
-                    "world_z_mm": panel.pos_z_mm,
-                    "panel_rotation_deg": panel.rotation_deg,
+                    "world_z_mm": wall.start_z_mm,
+                    "panel_rotation_deg": wall.rotation_deg,
                 })
 
         return {

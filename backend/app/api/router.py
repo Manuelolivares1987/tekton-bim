@@ -1,4 +1,4 @@
-from fastapi import APIRouter  # lumber-takeoff route added
+from fastapi import APIRouter
 
 from app.api.v1 import (
     ai_generator,
@@ -7,18 +7,21 @@ from app.api.v1 import (
     board_coverage,
     building_codes,
     calculations,
+    compliance,
     export,
     floor_plan,
     ifc,
     license,
     lumber_takeoff,
     materials,
+    mep,
     mep_electrical,
     mep_plumbing,
     panel_assignments,
     panelization,
     panels,
     projects,
+    roof,
 )
 
 api_router = APIRouter()
@@ -41,3 +44,6 @@ api_router.include_router(ai_generator.router, prefix="/ai", tags=["ai-generator
 api_router.include_router(building_codes.router, prefix="/codes", tags=["building-codes"])
 api_router.include_router(license.router, prefix="/license", tags=["license"])
 api_router.include_router(export.router, prefix="/export", tags=["export"])
+api_router.include_router(roof.router, prefix="/roof", tags=["roof"])
+api_router.include_router(mep.router, prefix="/mep", tags=["mep"])
+api_router.include_router(compliance.router, prefix="/compliance", tags=["compliance"])
