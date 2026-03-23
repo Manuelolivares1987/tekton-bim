@@ -28,6 +28,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -35,11 +36,14 @@
     "autoprefixer": "^10.4.0",
     "electron": "^34.0.0",
     "electron-builder": "^25.1.0",
+    "eslint": "^10.1.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
+    "typescript-eslint": "^8.57.1",
     "vite": "^6.0.0",
     "vite-plugin-electron": "^0.28.0",
-    "vite-plugin-electron-renderer": "^0.14.0"
+    "vite-plugin-electron-renderer": "^0.14.0",
+    "vitest": "^4.1.0"
   }
 }

@@ -22,6 +22,7 @@ import { useHistoryStore } from "../../store/history-store";
 import type { BimPanelData } from "../../api/bim-modeler-api";
 import FloorPlanView from "./FloorPlanView";
 import OpeningDialog from "./OpeningDialog";
+import WallPropertiesPanel from "./WallPropertiesPanel";
 import { createScene, startRenderLoop, handleResize } from "./SceneSetup";
 import { rebuildPanels, rebuildFraming, createGhostWall, createStartMarker } from "./WallRenderer";
 import { SCALE, snapToGrid, axisLock } from "./geometry";
@@ -217,15 +218,35 @@ export default function BimModeler3D() {
           const panel = meshMapRef.current.get(hits[0].object as THREE.Mesh);
           if (panel?.wall_id) {
             const wallId = panel.wall_id;
+            // Cache wall data for undo restoration
+            const { walls: currentWalls } = useWallStore.getState();
+            const wallData = currentWalls.find((w) => w.id === wallId);
+            const cachedWall = wallData ? { ...wallData } : null;
+
             execute({
               type: "delete-wall",
-              description: `Borrar muro`,
-              execute: async () => { await deleteWall(wallId); fetchSummary(currentProjectId!); },
+              description: `Borrar ${cachedWall?.label || "muro"}`,
+              execute: async () => {
+                await deleteWall(wallId);
+                clearSelection();
+                fetchSummary(currentProjectId!);
+              },
               undo: async () => {
-                // Cannot undo delete easily without caching wall data — reload all
-                await fetchWalls(currentProjectId!);
-                const { walls: w } = useWallStore.getState();
-                w.forEach((wall) => useWallStore.getState().fetchWallAssembly(wall.id));
+                if (!cachedWall) return;
+                // Recreate wall with same geometry
+                const result = await drawWall({
+                  project_id: currentProjectId!,
+                  start_x_mm: cachedWall.start_x_mm,
+                  start_z_mm: cachedWall.start_z_mm,
+                  end_x_mm: cachedWall.end_x_mm,
+                  end_z_mm: cachedWall.end_z_mm,
+                  height_mm: cachedWall.height_mm,
+                  thickness_mm: cachedWall.thickness_mm,
+                  standard_panel_width_mm: cachedWall.standard_panel_width_mm,
+                  stud_spacing_mm: cachedWall.stud_spacing_mm,
+                });
+                selectWall(result.wall.id);
+                fetchSummary(currentProjectId!);
               },
             });
           }
@@ -410,6 +431,9 @@ export default function BimModeler3D() {
           )}
         </div>
       </div>
+
+      {/* Wall Properties Panel (right sidebar when wall selected) */}
+      {selectedWall && <WallPropertiesPanel />}
 
       {/* Opening Dialog */}
       {openingDialogWallId && selectedWall && (
