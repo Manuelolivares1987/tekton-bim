@@ -248,6 +248,78 @@ export function createGhostWall(
   return group;
 }
 
+// ── Roof Rendering ──
+
+const ROOF_COLOR = 0xb87333; // copper
+const RIDGE_COLOR = 0xe5a44c;
+
+export function rebuildRoofs(
+  scene: THREE.Scene,
+  roofMeshes: THREE.Object3D[],
+  roofGeometries: Array<{ planes: Array<{ vertices: number[][] }>; ridge_line?: number[][] | null }>,
+): THREE.Object3D[] {
+  roofMeshes.forEach((obj) => scene.remove(obj));
+  const newMeshes: THREE.Object3D[] = [];
+
+  for (const roofGeo of roofGeometries) {
+    // Render each roof plane
+    for (const plane of roofGeo.planes) {
+      if (plane.vertices.length < 3) continue;
+
+      const geo = new THREE.BufferGeometry();
+      const vertices: number[] = [];
+      const indices: number[] = [];
+
+      for (const v of plane.vertices) {
+        vertices.push(v[0] * SCALE, v[1] * SCALE, v[2] * SCALE);
+      }
+
+      // Triangulate (fan from first vertex)
+      for (let i = 1; i < plane.vertices.length - 1; i++) {
+        indices.push(0, i, i + 1);
+      }
+
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+
+      const mat = new THREE.MeshPhongMaterial({
+        color: ROOF_COLOR,
+        transparent: true,
+        opacity: 0.7,
+        side: THREE.DoubleSide,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.castShadow = true;
+      scene.add(mesh);
+      newMeshes.push(mesh);
+
+      // Edges
+      const edges = new THREE.EdgesGeometry(geo);
+      const edgeMesh = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
+        color: 0x8b5e3c, opacity: 0.6, transparent: true,
+      }));
+      scene.add(edgeMesh);
+      newMeshes.push(edgeMesh);
+    }
+
+    // Ridge line
+    if (roofGeo.ridge_line && roofGeo.ridge_line.length === 2) {
+      const r = roofGeo.ridge_line;
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(r[0][0] * SCALE, r[0][1] * SCALE, r[0][2] * SCALE),
+        new THREE.Vector3(r[1][0] * SCALE, r[1][1] * SCALE, r[1][2] * SCALE),
+      ]);
+      const lineMat = new THREE.LineBasicMaterial({ color: RIDGE_COLOR, linewidth: 2 });
+      const line = new THREE.Line(lineGeo, lineMat);
+      scene.add(line);
+      newMeshes.push(line);
+    }
+  }
+
+  return newMeshes;
+}
+
 /** Start point marker */
 export function createStartMarker(): THREE.Mesh {
   const geo = new THREE.SphereGeometry(0.07, 16, 16);

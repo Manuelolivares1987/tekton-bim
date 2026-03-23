@@ -80,6 +80,23 @@ export default function FloorPlanView() {
       }
     }
 
+    // Major grid labels (meters)
+    if (majorPx > 40) {
+      ctx.fillStyle = "#334155";
+      ctx.font = "9px monospace";
+      ctx.textAlign = "left";
+      const labelStartX = pan.x % majorPx;
+      for (let x = labelStartX; x < w; x += majorPx) {
+        const worldXm = ((x - pan.x) / zoom / 1000).toFixed(0);
+        ctx.fillText(`${worldXm}m`, x + 2, 10);
+      }
+      const labelStartY = pan.y % majorPx;
+      for (let y = labelStartY; y < h; y += majorPx) {
+        const worldZm = ((y - pan.y) / zoom / 1000).toFixed(0);
+        ctx.fillText(`${worldZm}`, 2, y - 2);
+      }
+    }
+
     // Origin axes
     const origin = toScreen(0, 0);
     ctx.strokeStyle = "#e5484d44";
@@ -140,15 +157,58 @@ export default function FloorPlanView() {
       ctx.font = `${Math.max(8, 10 * zoom / PX_PER_MM * 0.3)}px monospace`;
       ctx.fillText(`${(wall.length_mm / 1000).toFixed(2)}m`, len / 2, -thickPx / 2 - 4);
 
-      // Openings
+      // Openings (architectural convention)
       for (const op of wall.openings) {
         const opX = op.position_along_mm * zoom;
         const opW = op.width_mm * zoom;
-        ctx.fillStyle = op.opening_type === "door" ? "#f5a62366" : "#52a8ff44";
-        ctx.fillRect(opX, -thickPx / 2 - 1, opW, thickPx + 2);
-        ctx.strokeStyle = op.opening_type === "door" ? "#f5a623" : "#52a8ff";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(opX, -thickPx / 2 - 1, opW, thickPx + 2);
+
+        // Clear the wall where the opening is
+        ctx.fillStyle = "#0a0e17";
+        ctx.fillRect(opX, -thickPx / 2, opW, thickPx);
+
+        if (op.opening_type === "door") {
+          // Door: opening gap + swing arc
+          ctx.strokeStyle = "#f5a623";
+          ctx.lineWidth = 1;
+          // Swing arc (90° arc from hinge point)
+          ctx.beginPath();
+          ctx.arc(opX, -thickPx / 2, opW, 0, Math.PI / 2);
+          ctx.stroke();
+          // Door leaf line
+          ctx.beginPath();
+          ctx.moveTo(opX, -thickPx / 2);
+          ctx.lineTo(opX, -thickPx / 2 + opW);
+          ctx.stroke();
+          // Dimension
+          ctx.fillStyle = "#f5a623";
+          ctx.font = "8px monospace";
+          ctx.textAlign = "center";
+          ctx.fillText(`${op.width_mm}`, opX + opW / 2, thickPx / 2 + 10);
+        } else {
+          // Window: double line across opening
+          ctx.strokeStyle = "#52a8ff";
+          ctx.lineWidth = 1.5;
+          const inset = thickPx * 0.25;
+          // Two parallel lines (glass representation)
+          ctx.beginPath();
+          ctx.moveTo(opX, -inset);
+          ctx.lineTo(opX + opW, -inset);
+          ctx.moveTo(opX, inset);
+          ctx.lineTo(opX + opW, inset);
+          ctx.stroke();
+          // End marks
+          ctx.beginPath();
+          ctx.moveTo(opX, -thickPx / 2);
+          ctx.lineTo(opX, thickPx / 2);
+          ctx.moveTo(opX + opW, -thickPx / 2);
+          ctx.lineTo(opX + opW, thickPx / 2);
+          ctx.stroke();
+          // Dimension
+          ctx.fillStyle = "#52a8ff";
+          ctx.font = "8px monospace";
+          ctx.textAlign = "center";
+          ctx.fillText(`${op.width_mm}`, opX + opW / 2, thickPx / 2 + 10);
+        }
       }
 
       ctx.restore();

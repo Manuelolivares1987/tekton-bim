@@ -14,7 +14,7 @@
  */
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
-import { PenLine, DoorOpen, Trash2, Navigation, Hammer, Undo2, Redo2 } from "lucide-react";
+import { PenLine, DoorOpen, Trash2, Navigation, Hammer, Undo2, Redo2, ShieldCheck, Home } from "lucide-react";
 import { useProjectStore } from "../../store/project-store";
 import { useWallStore } from "../../store/wall-store";
 import { useToolStore, type BimTool } from "../../store/tool-store";
@@ -23,9 +23,12 @@ import type { BimPanelData } from "../../api/bim-modeler-api";
 import FloorPlanView from "./FloorPlanView";
 import OpeningDialog from "./OpeningDialog";
 import WallPropertiesPanel from "./WallPropertiesPanel";
+import CompliancePanel from "./CompliancePanel";
+import RoofPanel from "./RoofPanel";
 import { createScene, startRenderLoop, handleResize } from "./SceneSetup";
-import { rebuildPanels, rebuildFraming, createGhostWall, createStartMarker } from "./WallRenderer";
+import { rebuildPanels, rebuildFraming, rebuildRoofs, createGhostWall, createStartMarker } from "./WallRenderer";
 import { SCALE, snapToGrid, axisLock } from "./geometry";
+import client from "../../api/client";
 
 const TOOLS: { id: BimTool; label: string; icon: React.ReactNode; key: string }[] = [
   { id: "draw-wall", label: "Dibujar Muro", icon: <PenLine size={16} />, key: "W" },
@@ -46,6 +49,7 @@ export default function BimModeler3D() {
   const ghostWallRef = useRef<THREE.Group | null>(null);
   const startMarkerRef = useRef<THREE.Mesh | null>(null);
   const pointerDownRef = useRef<{ x: number; y: number } | null>(null);
+  const roofMeshesRef = useRef<THREE.Object3D[]>([]);
 
   // ── Stores ──
   const { currentProjectId } = useProjectStore();
@@ -62,6 +66,8 @@ export default function BimModeler3D() {
   // ── Local UI state ──
   const [liveDistance, setLiveDistance] = useState("");
   const [openingDialogWallId, setOpeningDialogWallId] = useState<number | null>(null);
+  const [roofGeometries, setRoofGeometries] = useState<Array<{ planes: Array<{ vertices: number[][] }>; ridge_line?: number[][] | null }>>([]);
+  const [showRightPanel, setShowRightPanel] = useState<"properties" | "roof" | "compliance" | null>(null);
 
   const selectedWall = walls.find((w) => w.id === selectedWallId);
 
@@ -111,6 +117,28 @@ export default function BimModeler3D() {
     if (!scene) return;
     framingMeshesRef.current = rebuildFraming(scene, framingMeshesRef.current, wallAssemblies);
   }, [wallAssemblies]);
+
+  // ── Rebuild roofs ──
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    roofMeshesRef.current = rebuildRoofs(scene, roofMeshesRef.current, roofGeometries);
+  }, [roofGeometries]);
+
+  // ── Fetch roofs on project load ──
+  useEffect(() => {
+    if (!currentProjectId) return;
+    client.get(`/roof/project/${currentProjectId}/roofs`).then(async (res) => {
+      const geos = [];
+      for (const r of res.data) {
+        try {
+          const g = await client.get(`/roof/roofs/${r.id}/geometry`);
+          geos.push(g.data);
+        } catch { /* skip */ }
+      }
+      setRoofGeometries(geos);
+    }).catch(() => {});
+  }, [currentProjectId, walls.length]);
 
   // ── Pointer interaction ──
   useEffect(() => {
@@ -371,6 +399,30 @@ export default function BimModeler3D() {
           <span className="hidden lg:inline">Entramado</span>
         </button>
 
+        {/* Roof toggle */}
+        <button onClick={() => setShowRightPanel(showRightPanel === "roof" ? null : "roof")}
+          className="flex items-center gap-1 px-2 py-1.5 text-xs rounded-md transition-all"
+          style={{
+            background: showRightPanel === "roof" ? "rgba(184,115,51,0.15)" : "transparent",
+            color: showRightPanel === "roof" ? "#b87333" : "var(--muted-foreground)",
+          }}
+          title="Techumbre">
+          <Home size={14} />
+          <span className="hidden xl:inline">Techo</span>
+        </button>
+
+        {/* Compliance toggle */}
+        <button onClick={() => setShowRightPanel(showRightPanel === "compliance" ? null : "compliance")}
+          className="flex items-center gap-1 px-2 py-1.5 text-xs rounded-md transition-all"
+          style={{
+            background: showRightPanel === "compliance" ? "rgba(48,164,108,0.15)" : "transparent",
+            color: showRightPanel === "compliance" ? "#30a46c" : "var(--muted-foreground)",
+          }}
+          title="Validación normativa">
+          <ShieldCheck size={14} />
+          <span className="hidden xl:inline">Normas</span>
+        </button>
+
         <div className="w-px h-5" style={{ background: "var(--border)" }} />
 
         {/* Undo / Redo */}
@@ -444,8 +496,17 @@ export default function BimModeler3D() {
         </div>
       </div>
 
-      {/* Wall Properties Panel (right sidebar when wall selected) */}
-      {selectedWall && <WallPropertiesPanel />}
+      {/* Right sidebar */}
+      {(selectedWall || showRightPanel) && (
+        <div className="w-60 flex-shrink-0 overflow-y-auto p-3 space-y-4"
+          style={{ background: "var(--card)", borderLeft: "1px solid var(--border)" }}>
+          {selectedWall && showRightPanel !== "roof" && showRightPanel !== "compliance" && (
+            <WallPropertiesPanel />
+          )}
+          {showRightPanel === "roof" && <RoofPanel />}
+          {showRightPanel === "compliance" && <CompliancePanel />}
+        </div>
+      )}
 
       {/* Opening Dialog */}
       {openingDialogWallId && selectedWall && (

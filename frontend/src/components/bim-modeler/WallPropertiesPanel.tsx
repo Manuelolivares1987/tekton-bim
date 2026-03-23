@@ -60,8 +60,7 @@ export default function WallPropertiesPanel() {
   };
 
   return (
-    <div className="w-60 flex-shrink-0 overflow-y-auto p-3 space-y-4"
-      style={{ background: "var(--card)", borderLeft: "1px solid var(--border)" }}>
+    <div className="space-y-4">
 
       {/* Wall header */}
       <div>
