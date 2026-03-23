@@ -218,10 +218,10 @@ export default function BimModeler3D() {
           const panel = meshMapRef.current.get(hits[0].object as THREE.Mesh);
           if (panel?.wall_id) {
             const wallId = panel.wall_id;
-            // Cache wall data for undo restoration
+            // Cache wall data + openings for complete undo restoration
             const { walls: currentWalls } = useWallStore.getState();
             const wallData = currentWalls.find((w) => w.id === wallId);
-            const cachedWall = wallData ? { ...wallData } : null;
+            const cachedWall = wallData ? structuredClone(wallData) : null;
 
             execute({
               type: "delete-wall",
@@ -245,6 +245,18 @@ export default function BimModeler3D() {
                   standard_panel_width_mm: cachedWall.standard_panel_width_mm,
                   stud_spacing_mm: cachedWall.stud_spacing_mm,
                 });
+                // Restore openings
+                if (cachedWall.openings?.length > 0) {
+                  for (const op of cachedWall.openings) {
+                    await addWallOpening(result.wall.id, {
+                      opening_type: op.opening_type,
+                      position_along_mm: op.position_along_mm,
+                      position_y_mm: op.position_y_mm,
+                      width_mm: op.width_mm,
+                      height_mm: op.height_mm,
+                    });
+                  }
+                }
                 selectWall(result.wall.id);
                 fetchSummary(currentProjectId!);
               },
@@ -283,7 +295,7 @@ export default function BimModeler3D() {
       if (ghostWallRef.current) { scene.remove(ghostWallRef.current); ghostWallRef.current = null; }
     };
   }, [activeTool, drawingWallStart, currentProjectId, activeStoreyId, execute,
-      drawWall, deleteWall, startDrawingWall, cancelDrawingWall, selectPanel, selectWall, clearSelection, fetchSummary, fetchWalls]);
+      drawWall, deleteWall, addWallOpening, startDrawingWall, cancelDrawingWall, selectPanel, selectWall, clearSelection, fetchSummary, fetchWalls]);
 
   // ── Keyboard ──
   useEffect(() => {

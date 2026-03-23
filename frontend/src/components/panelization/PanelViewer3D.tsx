@@ -37,6 +37,7 @@ interface Panel3D {
   panel_type: string;
   is_custom_cut: boolean;
   has_opening: boolean;
+  opening_type?: string | null;
   weight_kg: number;
   area_m2: number;
   layers?: { name: string; thickness_mm: number; color: string }[];
