@@ -1,27 +1,29 @@
 import { create } from "zustand";
 
+/** Views available in the app. Legacy views kept for backward compat but hidden from sidebar. */
 export type ViewType =
   | "dashboard"
+  | "ai-generator"
+  | "bim-modeler"
   | "viewer"
+  | "sip-panelization"
+  | "panelization-takeoff"
+  | "panel-viewer-3d"
+  | "shop-drawings"
+  | "electrical"
+  | "plumbing"
+  // Legacy — not in sidebar but still routable
   | "takeoff"
   | "wall-calc"
   | "volcanic-rock"
   | "panels"
   | "materials"
-  | "electrical"
-  | "plumbing"
   | "ai-chat"
-  | "ai-generator"
   | "panel-assignment"
   | "assembly-plans"
   | "lumber-takeoff"
   | "board-coverage"
-  | "sip-panelization"
-  | "panelization-takeoff"
-  | "panel-viewer-3d"
-  | "shop-drawings"
-  | "floor-plan"
-  | "bim-modeler";
+  | "floor-plan";
 
 interface UIStore {
   activeView: ViewType;

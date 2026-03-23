@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { useBimModelerStore } from "../../store/bim-modeler-store";
+import { useWallStore } from "../../store/wall-store";
+import { useToolStore } from "../../store/tool-store";
+import { useHistoryStore } from "../../store/history-store";
 import { useProjectStore } from "../../store/project-store";
 
 const GRID_SIZE = 100; // mm
@@ -8,11 +10,9 @@ const PX_PER_MM = 0.12; // pixels per mm at default zoom
 export default function FloorPlanView() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { currentProjectId } = useProjectStore();
-  const {
-    walls, panels, drawingWallStart, activeTool,
-    drawWall, startDrawingWall, cancelDrawingWall, setTool,
-    fetchWalls, fetchSummary, activeStoreyId,
-  } = useBimModelerStore();
+  const { walls, panels, activeStoreyId, drawWall, fetchSummary, deleteWall, fetchWalls } = useWallStore();
+  const { drawingWallStart, activeTool, startDrawingWall, cancelDrawingWall } = useToolStore();
+  const { execute } = useHistoryStore();
 
   const [zoom, setZoom] = useState(PX_PER_MM);
   const [pan, setPan] = useState({ x: 100, y: 100 });
@@ -279,16 +279,27 @@ export default function FloorPlanView() {
 
       const dx = endX - drawingWallStart.x;
       const dz = endZ - drawingWallStart.z;
-      if (Math.sqrt(dx * dx + dz * dz) > 300) {
-        drawWall({
-          project_id: currentProjectId,
-          start_x_mm: drawingWallStart.x,
-          start_z_mm: drawingWallStart.z,
-          end_x_mm: endX,
-          end_z_mm: endZ,
-          storey_id: activeStoreyId ?? undefined,
-        }).then(() => {
-          if (currentProjectId) fetchSummary(currentProjectId);
+      const length = Math.sqrt(dx * dx + dz * dz);
+      if (length > 300) {
+        const startPt = { ...drawingWallStart };
+        const pid = currentProjectId;
+        execute({
+          type: "draw-wall",
+          description: `Muro ${Math.round(length)}mm`,
+          execute: async () => {
+            await drawWall({
+              project_id: pid,
+              start_x_mm: startPt.x, start_z_mm: startPt.z,
+              end_x_mm: endX, end_z_mm: endZ,
+              storey_id: activeStoreyId ?? undefined,
+            });
+            fetchSummary(pid);
+          },
+          undo: async () => {
+            const { walls: w } = useWallStore.getState();
+            if (w.length > 0) await deleteWall(w[w.length - 1].id);
+            fetchSummary(pid);
+          },
         });
       }
       cancelDrawingWall();
