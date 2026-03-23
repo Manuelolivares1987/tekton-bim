@@ -165,8 +165,8 @@ export default function BimModeler3D() {
         const hits = raycaster.intersectObject(ground);
         if (hits.length === 0) return;
         const pt = hits[0].point;
-        let snapX = snapToGrid(pt.x / SCALE, 100);
-        let snapZ = snapToGrid(pt.z / SCALE, 100);
+        const snapX = snapToGrid(pt.x / SCALE, 100);
+        const snapZ = snapToGrid(pt.z / SCALE, 100);
         if (!drawingWallStart) {
           startDrawingWall(snapX, snapZ);
           if (startMarkerRef.current) {

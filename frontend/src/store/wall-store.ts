@@ -20,6 +20,7 @@ interface WallStore {
   summary: ModularSummary | null;
 
   // Domain actions
+  updateWall: (wallId: number, data: Record<string, unknown>) => Promise<WallAssemblyData>;
   fetchWalls: (projectId: number) => Promise<void>;
   drawWall: (data: Parameters<typeof api.drawWall>[0]) => Promise<WallAssemblyData>;
   deleteWall: (wallId: number) => Promise<void>;
@@ -41,6 +42,16 @@ export const useWallStore = create<WallStore>((set, get) => ({
   activeStoreyId: null,
   catalog: [],
   summary: null,
+
+  updateWall: async (wallId: number, data: Record<string, unknown>) => {
+    const result = await api.updateWall(wallId, data);
+    set((s) => ({
+      walls: s.walls.map((w) => w.id === wallId ? result.wall : w),
+      wallAssemblies: { ...s.wallAssemblies, [wallId]: result },
+      panels: s.panels.filter((p) => p.wall_id !== wallId).concat(result.panels),
+    }));
+    return result;
+  },
 
   fetchWalls: async (projectId) => {
     const walls = await api.listWalls(projectId);

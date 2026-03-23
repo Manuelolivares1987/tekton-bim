@@ -58,4 +58,7 @@ jobs:
 
       - name: Lint
         run: npx eslint src/ --max-warnings=50
-        continue-on-error: true  # warnings allowed for now
+
+      - name: Ruff (backend)
+        working-directory: backend
+        run: pip install ruff && ruff check app/ tests/

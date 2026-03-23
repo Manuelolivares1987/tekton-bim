@@ -7,8 +7,10 @@ from app.api.v1 import (
     board_coverage,
     building_codes,
     calculations,
+    export,
     floor_plan,
     ifc,
+    license,
     lumber_takeoff,
     materials,
     mep_electrical,
@@ -37,3 +39,5 @@ api_router.include_router(floor_plan.router, prefix="/floor-plans", tags=["floor
 api_router.include_router(bim_modeler.router, prefix="/bim-modeler", tags=["bim-modeler"])
 api_router.include_router(ai_generator.router, prefix="/ai", tags=["ai-generator"])
 api_router.include_router(building_codes.router, prefix="/codes", tags=["building-codes"])
+api_router.include_router(license.router, prefix="/license", tags=["license"])
+api_router.include_router(export.router, prefix="/export", tags=["export"])
