@@ -49,9 +49,9 @@ export default function BimModeler3D() {
 
   // ── Stores ──
   const { currentProjectId } = useProjectStore();
-  const { panels, walls, wallAssemblies, storeys, activeStoreyId,
+  const { panels, walls, wallAssemblies, activeStoreyId,
     fetchWalls, fetchPanels, fetchSummary, fetchStoreys, fetchCatalog,
-    drawWall, deleteWall, addWallOpening, fetchWallAssembly,
+    drawWall, deleteWall, addWallOpening,
   } = useWallStore();
   const { activeTool, selectedWallId, selectedPanelId, drawingWallStart, showFraming,
     setTool, selectWall, selectPanel, clearSelection,

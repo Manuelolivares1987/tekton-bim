@@ -1,14 +1,52 @@
 {
-  "name": "cadworks",
-  "version": "0.1.0",
-  "description": "BIM Construction Software - Panels, Partitions, IFC, and MEP Design",
+  "name": "tekton-bim",
+  "version": "0.2.0",
+  "description": "Tekton BIM — Construcción Inteligente con Paneles SIP",
+  "author": "Tekton BIM",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:web": "tsc && vite build",
     "preview": "vite preview",
-    "electron:dev": "vite --host & sleep 3 && electron .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint src/ --max-warnings=50"
+  },
+  "build": {
+    "appId": "com.tekton.bim",
+    "productName": "Tekton BIM",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "public/assets/icon.ico"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "public/assets/icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "public/assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": ["es_ES", "en_US"]
+    },
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": ["**/*", "!**/__pycache__/**", "!*.db", "!.env", "!uploads/**"]
+      }
+    ]
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

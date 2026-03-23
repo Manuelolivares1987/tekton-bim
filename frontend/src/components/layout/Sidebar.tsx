@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   LayoutDashboard,
   PenLine,
@@ -11,8 +12,10 @@ import {
   PanelLeftClose,
   PanelLeft,
   Box,
+  Key,
 } from "lucide-react";
 import { useUIStore, type ViewType } from "../../store/ui-store";
+import LicenseDialog from "../ui/LicenseDialog";
 
 interface NavItem {
   icon: React.ReactNode;
@@ -61,6 +64,7 @@ const sections: NavSection[] = [
 
 export default function Sidebar() {
   const { activeView, setActiveView, sidebarOpen, toggleSidebar } = useUIStore();
+  const [showLicense, setShowLicense] = useState(false);
 
   return (
     <aside
@@ -172,13 +176,21 @@ export default function Sidebar() {
 
       {/* Footer */}
       {sidebarOpen && (
-        <div
-          className="px-3 py-2.5 border-t text-[10px]"
-          style={{ borderColor: "var(--border)", color: "var(--muted-foreground)" }}
-        >
-          Tekton v0.2.0
+        <div className="px-3 py-2 border-t flex items-center justify-between"
+          style={{ borderColor: "var(--border)" }}>
+          <span className="text-[10px]" style={{ color: "var(--muted-foreground)" }}>
+            Tekton v0.2.0
+          </span>
+          <button onClick={() => setShowLicense(true)}
+            className="p-1 rounded-md transition-colors"
+            style={{ color: "var(--muted-foreground)" }}
+            title="Licencia">
+            <Key size={12} />
+          </button>
         </div>
       )}
+
+      <LicenseDialog open={showLicense} onClose={() => setShowLicense(false)} />
     </aside>
   );
 }
