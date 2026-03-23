@@ -1,8 +1,10 @@
 """BIM panel model - individual panels placed in the 3D scene."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -50,8 +52,8 @@ class BimPanel(Base):
     ifc_element_id = Column(Integer, ForeignKey("ifc_elements.id"), nullable=True)
 
     notes = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     project = relationship("Project")
     catalog_item = relationship("PanelCatalog")

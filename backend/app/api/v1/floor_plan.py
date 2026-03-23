@@ -1,20 +1,25 @@
 """Floor plan editor API endpoints."""
 
-import math
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.models.floor_plan import FloorPlan, FloorPlanStorey, FloorPlanWall, FloorPlanOpening
-from app.services.floor_plan_bridge_service import FloorPlanBridgeService
-from app.services.floor_plan_3d_service import FloorPlan3DService
+from app.models.floor_plan import FloorPlan, FloorPlanOpening, FloorPlanStorey, FloorPlanWall
 from app.schemas.floor_plan import (
-    FloorPlanCreate, FloorPlanUpdate, FloorPlanResponse,
-    FloorPlanStoreyCreate, FloorPlanStoreyResponse,
-    FloorPlanWallCreate, FloorPlanWallUpdate, FloorPlanWallResponse,
-    FloorPlanOpeningCreate, FloorPlanOpeningResponse,
     BulkSaveRequest,
+    FloorPlanCreate,
+    FloorPlanOpeningCreate,
+    FloorPlanOpeningResponse,
+    FloorPlanResponse,
+    FloorPlanStoreyCreate,
+    FloorPlanStoreyResponse,
+    FloorPlanUpdate,
+    FloorPlanWallCreate,
+    FloorPlanWallResponse,
+    FloorPlanWallUpdate,
 )
+from app.services.floor_plan_3d_service import FloorPlan3DService
+from app.services.floor_plan_bridge_service import FloorPlanBridgeService
 
 router = APIRouter()
 

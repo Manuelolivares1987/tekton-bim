@@ -4,18 +4,15 @@ Takes a wall (length, height) with openings and a SIP configuration,
 and divides it into individual fabricable SIP panels.
 """
 
-import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
 from app.models.ifc_element import IfcElement
-from app.models.ifc_model import IfcModel
 from app.models.material import Material
+from app.models.panelization_result import PanelInstance, PanelizationResult
 from app.models.sip_panel_config import SipPanelConfig
 from app.models.wall_opening import WallOpening
-from app.models.panelization_result import PanelizationResult, PanelInstance
-from app.core.sip_constants import MIN_PANEL_WIDTH
 
 
 @dataclass
@@ -218,7 +215,7 @@ def _create_opening_panels(
     op_left = opening.x - zone_start  # relative position within zone
     op_bottom = opening.y
     op_top = opening.y + opening.rough_height
-    op_right = op_left + opening.rough_width
+    _op_right = op_left + opening.rough_width  # kept for documentation
 
     # Header panel (above the opening)
     header_height = panel_height - op_top

@@ -1,6 +1,8 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, UniqueConstraint, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -25,7 +27,7 @@ class IfcElement(Base):
 
     properties_json = Column(Text)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     ifc_model = relationship("IfcModel", back_populates="elements")
 

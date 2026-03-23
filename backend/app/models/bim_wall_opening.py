@@ -1,8 +1,10 @@
 """BimWallOpening model - doors/windows placed on walls."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -22,7 +24,7 @@ class BimWallOpening(Base):
     width_mm = Column(Float, nullable=False)
     height_mm = Column(Float, nullable=False)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     wall = relationship("BimWall", back_populates="openings")
 

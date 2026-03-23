@@ -1,12 +1,23 @@
 from fastapi import APIRouter  # lumber-takeoff route added
 
-from app.api.v1 import projects, ifc, panels, materials, calculations, mep_electrical, mep_plumbing
-from app.api.v1 import panel_assignments, assembly_plans, lumber_takeoff, board_coverage
-from app.api.v1 import panelization
-from app.api.v1 import floor_plan
-from app.api.v1 import bim_modeler
-from app.api.v1 import ai_generator
-from app.api.v1 import building_codes
+from app.api.v1 import (
+    ai_generator,
+    assembly_plans,
+    bim_modeler,
+    board_coverage,
+    building_codes,
+    calculations,
+    floor_plan,
+    ifc,
+    lumber_takeoff,
+    materials,
+    mep_electrical,
+    mep_plumbing,
+    panel_assignments,
+    panelization,
+    panels,
+    projects,
+)
 
 api_router = APIRouter()
 

@@ -1,8 +1,10 @@
 """Panelization result and panel instance models."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -16,8 +18,8 @@ class PanelizationResult(Base):
     sip_config_id = Column(Integer, ForeignKey("sip_panel_configs.id"), nullable=True)
     wood_frame_config_id = Column(Integer, nullable=True)  # FK added in Phase 2
     status = Column(String(50), default="draft")  # draft, confirmed
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     project = relationship("Project")
     ifc_element = relationship("IfcElement")

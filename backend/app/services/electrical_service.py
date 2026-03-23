@@ -2,18 +2,17 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.mep_circuit import MepCircuit
-from app.models.mep_electrical_device import MepElectricalDevice
 from app.core.formulas.electrical import (
-    calculate_current,
     apply_continuous_factor,
+    calculate_current,
+    calculate_voltage_drop,
     select_breaker,
+    select_conduit,
     select_wire_size,
     size_wire_with_voltage_drop,
-    select_conduit,
-    calculate_voltage_drop,
-    calculate_lighting_load,
 )
+from app.models.mep_circuit import MepCircuit
+from app.models.mep_electrical_device import MepElectricalDevice
 
 
 class ElectricalDesignService:

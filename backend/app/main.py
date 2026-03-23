@@ -4,10 +4,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import settings
-from app.db.session import init_db, close_db, SessionLocal
-from app.db.seed import seed_all
 from app.api.router import api_router
+from app.config import settings
+from app.db.seed import seed_all
+from app.db.session import SessionLocal, close_db, init_db
 
 
 @asynccontextmanager

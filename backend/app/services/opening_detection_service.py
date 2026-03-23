@@ -2,13 +2,11 @@
 
 import ifcopenshell
 import ifcopenshell.util.placement
-
 from sqlalchemy.orm import Session
 
-from app.models.ifc_element import IfcElement
-from app.models.ifc_model import IfcModel
-from app.models.wall_opening import WallOpening
 from app.core.sip_constants import ROUGH_OPENING_CLEARANCE
+from app.models.ifc_element import IfcElement
+from app.models.wall_opening import WallOpening
 
 
 class OpeningDetectionService:

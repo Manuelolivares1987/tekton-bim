@@ -1,8 +1,10 @@
 """SIP panel configuration model."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -34,8 +36,8 @@ class SipPanelConfig(Base):
     spline_width_mm = Column(Float, default=89.0)
     spline_depth_mm = Column(Float, default=38.0)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     project = relationship("Project")
     core_material = relationship("Material", foreign_keys=[core_material_id])

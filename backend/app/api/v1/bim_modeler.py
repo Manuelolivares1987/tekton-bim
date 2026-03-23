@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.bim_panel import BimPanel
 from app.models.bim_storey import BimStorey
-from app.models.wall_group import WallGroup
 from app.models.panel_catalog import PanelCatalog
+from app.models.wall_group import WallGroup
 from app.services.bim_bridge_service import BimBridgeService
 from app.services.bim_modular_service import BimModularService
 from app.services.bim_wall_service import BimWallService

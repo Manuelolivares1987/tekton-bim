@@ -1,7 +1,6 @@
 """Tests for SIP panelization engine — the core algorithm."""
 
-import pytest
-from app.services.sip_panelization_service import panelize_wall, Opening
+from app.services.sip_panelization_service import Opening, panelize_wall
 
 
 class TestPanelizeWallBasic:

@@ -1,15 +1,15 @@
 """Bridge service: converts BIM panels into IfcElement + WallOpening records."""
 
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
+
 from sqlalchemy.orm import Session
 
-from app.models.bim_panel import BimPanel
-from app.models.panel_catalog import PanelCatalog
-from app.models.ifc_model import IfcModel
-from app.models.ifc_element import IfcElement
-from app.models.wall_opening import WallOpening
 from app.core.sip_constants import ROUGH_OPENING_CLEARANCE
+from app.models.bim_panel import BimPanel
+from app.models.ifc_element import IfcElement
+from app.models.ifc_model import IfcModel
+from app.models.wall_opening import WallOpening
 
 
 class BimBridgeService:
@@ -51,7 +51,7 @@ class BimBridgeService:
             file_size_bytes=0,
             ifc_schema="BimModeler",
             authoring_tool="Tekton BIM Modeler",
-            parsed_at=datetime.utcnow(),
+            parsed_at=datetime.now(UTC),
         )
         self.db.add(ifc_model)
         self.db.flush()

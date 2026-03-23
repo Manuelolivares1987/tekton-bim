@@ -4,15 +4,15 @@ import os
 import shutil
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
 from app.config import settings
+from app.db.session import get_db
 from app.models.ifc_model import IfcModel
+from app.schemas.ifc import IfcElementResponse, IfcModelResponse, IfcModelSummary, IfcUploadResponse
 from app.services.ifc_parser import IfcParsingService
-from app.schemas.ifc import IfcModelResponse, IfcElementResponse, IfcModelSummary, IfcUploadResponse
 
 router = APIRouter()
 

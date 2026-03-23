@@ -6,13 +6,13 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.project import Project
+from app.schemas.assembly_plan import (
+    AssemblySummaryResponse,
+    MaterialBOMResponse,
+    PanelScheduleResponse,
+)
 from app.services.assembly_plan_service import AssemblyPlanService
 from app.services.pdf_generator import PdfGenerator
-from app.schemas.assembly_plan import (
-    PanelScheduleResponse,
-    MaterialBOMResponse,
-    AssemblySummaryResponse,
-)
 
 router = APIRouter()
 

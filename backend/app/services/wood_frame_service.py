@@ -3,15 +3,13 @@
 Generates framing members (studs, plates, headers, etc.) for a panel instance.
 """
 
-import math
 from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.models.panelization_result import PanelInstance, PanelizationResult
 from app.models.framing_member import FramingMember
+from app.models.panelization_result import PanelInstance, PanelizationResult
 from app.models.wood_frame_config import WoodFrameConfig
-
 
 # Header depth lookup by opening width (mm -> header depth mm)
 # Based on IRC prescriptive header sizing for single-story

@@ -5,15 +5,15 @@ engine work with floor plan data without any modifications.
 """
 
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
-from app.models.floor_plan import FloorPlan, FloorPlanStorey, FloorPlanWall, FloorPlanOpening
-from app.models.ifc_model import IfcModel
-from app.models.ifc_element import IfcElement
-from app.models.wall_opening import WallOpening
 from app.core.sip_constants import ROUGH_OPENING_CLEARANCE
+from app.models.floor_plan import FloorPlan
+from app.models.ifc_element import IfcElement
+from app.models.ifc_model import IfcModel
+from app.models.wall_opening import WallOpening
 
 
 class FloorPlanBridgeService:
@@ -48,7 +48,7 @@ class FloorPlanBridgeService:
             file_size_bytes=0,
             ifc_schema="FloorPlan",
             authoring_tool="Tekton Floor Plan Editor",
-            parsed_at=datetime.utcnow(),
+            parsed_at=datetime.now(UTC),
         )
         self.db.add(ifc_model)
         self.db.flush()
@@ -81,7 +81,7 @@ class FloorPlanBridgeService:
                     global_id=str(uuid.uuid4())[:22],
                     ifc_type="IfcWallStandardCase",
                     name=wall.label or f"M-{wall_counter:03d}",
-                    description=f"Muro generado desde plano de planta",
+                    description="Muro generado desde plano de planta",
                     storey_name=storey.name,
                     type_name="FloorPlan Wall",
                     length_m=wall_length_m,

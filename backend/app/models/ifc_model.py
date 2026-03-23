@@ -1,6 +1,8 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -16,7 +18,7 @@ class IfcModel(Base):
     authoring_tool = Column(String(255))
     parsed_at = Column(DateTime)
     element_count = Column(Integer, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     project = relationship("Project", back_populates="ifc_models")
     elements = relationship("IfcElement", back_populates="ifc_model", cascade="all, delete-orphan")

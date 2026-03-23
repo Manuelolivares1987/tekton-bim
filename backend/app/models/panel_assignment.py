@@ -1,6 +1,8 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -13,8 +15,8 @@ class PanelAssignment(Base):
     panel_id = Column(Integer, ForeignKey("panels.id", ondelete="CASCADE"), nullable=False)
     panel_number = Column(String(50), nullable=False)
     notes = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     project = relationship("Project")
     ifc_element = relationship("IfcElement")

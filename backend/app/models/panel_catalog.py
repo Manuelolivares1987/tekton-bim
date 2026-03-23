@@ -1,8 +1,10 @@
 """Panel catalog model - standard panel types available for BIM modeling."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -21,7 +23,7 @@ class PanelCatalog(Base):
     skin_material_id = Column(Integer, ForeignKey("materials.id"), nullable=True)
     skin_thickness_mm = Column(Float, default=11.0)
     weight_kg = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     core_material = relationship("Material", foreign_keys=[core_material_id])
     skin_material = relationship("Material", foreign_keys=[skin_material_id])

@@ -1,8 +1,10 @@
 """Wall opening model for doors and windows detected from IFC."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -19,7 +21,7 @@ class WallOpening(Base):
     height_mm = Column(Float, nullable=False)
     rough_opening_width_mm = Column(Float, nullable=False)  # with clearances
     rough_opening_height_mm = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     wall_element = relationship("IfcElement", foreign_keys=[ifc_element_id])
     opening_element = relationship("IfcElement", foreign_keys=[opening_ifc_element_id])

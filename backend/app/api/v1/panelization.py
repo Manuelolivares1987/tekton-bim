@@ -4,27 +4,26 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.models.sip_panel_config import SipPanelConfig
 from app.models.ifc_element import IfcElement
 from app.models.ifc_model import IfcModel
-from app.models.wall_opening import WallOpening
-from app.services.sip_panelization_service import SipPanelizationService
-from app.services.opening_detection_service import OpeningDetectionService
-from app.services.wood_frame_service import WoodFrameService
-from app.services.panelization_takeoff_service import PanelizationTakeoffService
-from app.services.shop_drawing_service import ShopDrawingService
+from app.models.panelization_result import PanelizationResult
+from app.models.sip_panel_config import SipPanelConfig
 from app.models.wood_frame_config import WoodFrameConfig
 from app.schemas.panelization import (
-    SipPanelConfigCreate,
-    SipPanelConfigUpdate,
-    SipPanelConfigResponse,
-    WallOpeningCreate,
-    WallOpeningResponse,
-    PanelizeWallRequest,
     BulkPanelizeRequest,
     PanelInstanceResponse,
-    PanelizationResultResponse,
+    PanelizeWallRequest,
+    SipPanelConfigCreate,
+    SipPanelConfigResponse,
+    SipPanelConfigUpdate,
+    WallOpeningCreate,
+    WallOpeningResponse,
 )
+from app.services.opening_detection_service import OpeningDetectionService
+from app.services.panelization_takeoff_service import PanelizationTakeoffService
+from app.services.shop_drawing_service import ShopDrawingService
+from app.services.sip_panelization_service import SipPanelizationService
+from app.services.wood_frame_service import WoodFrameService
 
 router = APIRouter()
 

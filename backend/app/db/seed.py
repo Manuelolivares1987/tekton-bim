@@ -1,10 +1,10 @@
 """Seed database with default materials and panel types."""
 
 from sqlalchemy.orm import Session
+
 from app.models.material import Material
 from app.models.panel import Panel
 from app.models.panel_layer import PanelLayer
-
 
 DEFAULT_MATERIALS = [
     # Structural

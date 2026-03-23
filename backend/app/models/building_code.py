@@ -1,8 +1,10 @@
 """Building code models - standards and regulations knowledge base."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Text, Boolean, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -19,7 +21,7 @@ class BuildingCode(Base):
     source = Column(String(50), default="builtin")  # "builtin" | "uploaded"
     file_path = Column(String(500), nullable=True)  # path to PDF if uploaded
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     chunks = relationship("BuildingCodeChunk", back_populates="code", cascade="all, delete-orphan")
 

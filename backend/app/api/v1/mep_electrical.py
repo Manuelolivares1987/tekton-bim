@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.services.electrical_service import ElectricalDesignService
 from app.schemas.mep import (
     LoadCalculationRequest,
     LoadCalculationResult,
     WireSizingRequest,
     WireSizingResult,
 )
+from app.services.electrical_service import ElectricalDesignService
 
 router = APIRouter()
 

@@ -7,15 +7,12 @@ Flow:
 4. Inject: Add retrieved chunks to Claude's system prompt for house generation
 """
 
-import os
-from datetime import datetime
 from anthropic import Anthropic
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.core.normativas_sudamerica import BUILTIN_CODES
 from app.models.building_code import BuildingCode, BuildingCodeChunk
-from app.core.normativas_sudamerica import BUILTIN_CODES, get_all_countries, get_country_profile
-
 
 # Topics for categorization
 TOPICS = [

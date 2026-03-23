@@ -1,19 +1,19 @@
 """PDF generation service for assembly plans using ReportLab."""
 
 import io
-from datetime import datetime
+from datetime import UTC, datetime
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (
+    PageBreak,
+    Paragraph,
     SimpleDocTemplate,
+    Spacer,
     Table,
     TableStyle,
-    Paragraph,
-    Spacer,
-    PageBreak,
 )
 
 
@@ -89,7 +89,7 @@ class PdfGenerator:
         elements.append(Paragraph(project_name, self.styles["CoverSubtitle"]))
         elements.append(Spacer(1, 0.5 * inch))
         elements.append(Paragraph(
-            f"Generado: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+            f"Generado: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}",
             self.styles["CoverSubtitle"],
         ))
         elements.append(Paragraph(

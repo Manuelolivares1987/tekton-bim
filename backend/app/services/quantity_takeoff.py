@@ -1,10 +1,9 @@
 """Quantity takeoff calculation service."""
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
-from app.models.ifc_element import IfcElement
 from app.core.constants import ELEMENT_CATEGORIES
+from app.models.ifc_element import IfcElement
 
 
 class QuantityTakeoffService:

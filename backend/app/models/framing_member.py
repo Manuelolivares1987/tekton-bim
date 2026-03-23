@@ -1,7 +1,8 @@
 """Framing member model for wood frame panels."""
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Index
+from sqlalchemy import Column, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 

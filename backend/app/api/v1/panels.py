@@ -4,16 +4,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.services.panel_service import PanelService
 from app.schemas.panel import (
-    PanelCreate,
-    PanelUpdate,
-    PanelResponse,
-    PanelLayerCreate,
-    PanelLayerUpdate,
-    PanelLayerResponse,
     LayerReorderRequest,
+    PanelCreate,
+    PanelLayerCreate,
+    PanelLayerResponse,
+    PanelLayerUpdate,
+    PanelResponse,
+    PanelUpdate,
 )
+from app.services.panel_service import PanelService
 
 router = APIRouter()
 

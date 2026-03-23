@@ -1,6 +1,8 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -20,6 +22,6 @@ class MepCircuit(Base):
     total_load_watts = Column(Float)
     total_length_m = Column(Float)
     voltage_drop_pct = Column(Float)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     devices = relationship("MepElectricalDevice", back_populates="circuit", cascade="all, delete-orphan")

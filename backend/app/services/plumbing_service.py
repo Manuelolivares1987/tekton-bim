@@ -2,16 +2,15 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.mep_plumbing_fixture import MepPlumbingFixture
-from app.models.mep_pipe_segment import MepPipeSegment
 from app.core.formulas.plumbing import (
-    get_fixture_units,
-    get_drain_size,
-    fixture_units_to_gpm,
-    size_pipe,
-    calculate_system_pressure,
     FIXTURE_UNITS,
+    calculate_system_pressure,
+    fixture_units_to_gpm,
+    get_drain_size,
+    get_fixture_units,
+    size_pipe,
 )
+from app.models.mep_plumbing_fixture import MepPlumbingFixture
 
 
 class PlumbingDesignService:

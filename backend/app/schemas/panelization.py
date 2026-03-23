@@ -1,8 +1,8 @@
 """Pydantic schemas for panelization endpoints."""
 
 from datetime import datetime
-from pydantic import BaseModel
 
+from pydantic import BaseModel
 
 # --- SIP Panel Config ---
 

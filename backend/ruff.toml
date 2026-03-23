@@ -1,0 +1,19 @@
+target-version = "py313"
+line-length = 120
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",    # line too long — handled by formatter
+    "UP007",   # use X | Y instead of Union — keep for readability
+    "SIM108",  # ternary — sometimes if/else is clearer
+    "B008",    # function call in default arg — FastAPI Depends() pattern
+    "B904",    # raise from — noisy in FastAPI exception handlers
+    "E712",    # == True — needed for SQLAlchemy Column boolean filters
+    "B007",    # unused loop variable — sometimes intentional
+    "SIM110",  # reimplemented builtin — sometimes clearer as explicit loop
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["B", "SIM"]
+"app/db/alembic/*" = ["E", "F", "W", "I", "UP", "B", "SIM"]

@@ -8,12 +8,12 @@ from io import BytesIO
 
 from sqlalchemy.orm import Session
 
-from app.models.panelization_result import PanelizationResult, PanelInstance
-from app.models.sip_panel_config import SipPanelConfig
-from app.models.material import Material
-from app.models.ifc_element import IfcElement
-from app.models.framing_member import FramingMember
 from app.core.sip_constants import SIP_FASTENER_RULES
+from app.models.framing_member import FramingMember
+from app.models.ifc_element import IfcElement
+from app.models.material import Material
+from app.models.panelization_result import PanelInstance, PanelizationResult
+from app.models.sip_panel_config import SipPanelConfig
 
 
 class PanelizationTakeoffService:
@@ -162,7 +162,7 @@ class PanelizationTakeoffService:
     def export_excel(self, project_id: int, waste_factor: float = 1.1) -> BytesIO:
         """Export takeoff to Excel with multiple sheets."""
         import openpyxl
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
         wb = openpyxl.Workbook()
         summary = self.project_summary(project_id, waste_factor)

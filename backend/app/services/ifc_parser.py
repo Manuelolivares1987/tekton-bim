@@ -2,17 +2,16 @@
 
 import json
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 
 import ifcopenshell
 import ifcopenshell.geom
 import ifcopenshell.util.element as element_util
-
 from sqlalchemy.orm import Session
 
-from app.models.ifc_model import IfcModel
-from app.models.ifc_element import IfcElement
 from app.core.constants import QTO_MAPPING
+from app.models.ifc_element import IfcElement
+from app.models.ifc_model import IfcModel
 
 
 class IfcParser:
@@ -236,7 +235,7 @@ class IfcParsingService:
                 continue
 
         ifc_model.element_count = element_count
-        ifc_model.parsed_at = datetime.utcnow()
+        ifc_model.parsed_at = datetime.now(UTC)
         self.db.commit()
 
         parse_time = time.time() - start_time

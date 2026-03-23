@@ -2,13 +2,14 @@
 
 import os
 import shutil
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
 from app.config import settings
-from app.services.code_knowledge_service import CodeKnowledgeService
 from app.core.normativas_sudamerica import get_all_countries, get_country_profile
+from app.db.session import get_db
+from app.services.code_knowledge_service import CodeKnowledgeService
 
 router = APIRouter()
 

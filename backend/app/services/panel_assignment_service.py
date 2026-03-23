@@ -1,12 +1,10 @@
 """Panel assignment service - assigns numbered SIP panels to IFC wall elements."""
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
-from app.models.panel_assignment import PanelAssignment
-from app.models.panel import Panel
 from app.models.ifc_element import IfcElement
-
+from app.models.panel import Panel
+from app.models.panel_assignment import PanelAssignment
 
 # Prefix mapping for panel categories
 CATEGORY_PREFIX = {

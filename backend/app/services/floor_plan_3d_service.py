@@ -1,7 +1,9 @@
 """3D extrusion service for floor plans."""
 
 import math
+
 from sqlalchemy.orm import Session
+
 from app.models.floor_plan import FloorPlan, FloorPlanWall
 
 

@@ -1,6 +1,5 @@
 """Plumbing engineering calculation formulas (IPC/UPC-based)."""
 
-import math
 
 # Fixture unit values per UPC/IPC
 FIXTURE_UNITS: dict[str, dict] = {

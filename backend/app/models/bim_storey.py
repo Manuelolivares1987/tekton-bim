@@ -1,8 +1,10 @@
 """BIM Storey model - floor levels for the modular construction system."""
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -16,7 +18,7 @@ class BimStorey(Base):
     elevation_mm = Column(Float, nullable=False, default=0.0)  # height from ground level
     floor_height_mm = Column(Float, nullable=False, default=2440.0)  # storey height (wall height)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     project = relationship("Project")
 

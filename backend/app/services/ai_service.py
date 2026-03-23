@@ -1,6 +1,7 @@
 """Claude API integration service for AI-powered analysis."""
 
 import json
+
 from anthropic import Anthropic
 
 from app.config import settings

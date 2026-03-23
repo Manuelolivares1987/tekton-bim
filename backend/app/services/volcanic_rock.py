@@ -7,12 +7,12 @@ Supports two calculation methods:
 
 from sqlalchemy.orm import Session
 
-from app.models.panel import Panel
 from app.core.formulas.insulation import (
+    apply_waste_factor,
     calculate_insulation_volume,
     calculate_insulation_weight,
-    apply_waste_factor,
 )
+from app.models.panel import Panel
 from app.services.wall_calculator import WallAreaCalculator
 
 

@@ -1,12 +1,12 @@
 """Service for modular BIM construction - auto-grouping, storeys, connections."""
 
 import math
+
 from sqlalchemy.orm import Session
 
 from app.models.bim_panel import BimPanel
 from app.models.bim_storey import BimStorey
 from app.models.wall_group import WallGroup
-
 
 # Tolerance for considering panels as adjacent (mm)
 ADJACENCY_TOLERANCE = 50.0

@@ -1,10 +1,12 @@
 """Tests for BimWallService — wall creation, panelization orchestration, framing."""
 
-import pytest
 import asyncio
-from app.db.session import init_db, SessionLocal
-from app.services.bim_wall_service import BimWallService
+
+import pytest
+
+from app.db.session import SessionLocal, init_db
 from app.models.project import Project
+from app.services.bim_wall_service import BimWallService
 
 
 @pytest.fixture(scope="module")

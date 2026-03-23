@@ -1,9 +1,11 @@
 """Floor plan models for the 2D plan editor."""
 
 import math
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, ForeignKey, Index
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.models.base import Base
 
 
@@ -18,8 +20,8 @@ class FloorPlan(Base):
     default_wall_thickness_mm = Column(Float, default=150.0)
     default_wall_height_mm = Column(Float, default=2440.0)
     ifc_model_id = Column(Integer, ForeignKey("ifc_models.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     project = relationship("Project")
     ifc_model = relationship("IfcModel")
@@ -40,7 +42,7 @@ class FloorPlanStorey(Base):
     level_index = Column(Integer, nullable=False)
     elevation_mm = Column(Float, default=0.0)
     height_mm = Column(Float, default=2440.0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     floor_plan = relationship("FloorPlan", back_populates="storeys")
     walls = relationship("FloorPlanWall", back_populates="storey", cascade="all, delete-orphan")
@@ -59,7 +61,7 @@ class FloorPlanWall(Base):
     height_mm = Column(Float, nullable=True)  # null = use storey height
     label = Column(String(50))
     ifc_element_id = Column(Integer, ForeignKey("ifc_elements.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     storey = relationship("FloorPlanStorey", back_populates="walls")
     openings = relationship("FloorPlanOpening", back_populates="wall", cascade="all, delete-orphan")
@@ -94,6 +96,6 @@ class FloorPlanOpening(Base):
     position_y_mm = Column(Float, default=0.0)
     width_mm = Column(Float, nullable=False)
     height_mm = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     wall = relationship("FloorPlanWall", back_populates="openings")

@@ -7,19 +7,15 @@ Flow:
 4. Returns complete project with panels, framing, and cost estimate
 """
 
-import json
-import math
-from pydantic import BaseModel
 from anthropic import Anthropic
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.core.building_rules import get_full_rules_context, DEFAULT_PRICES_CLP
-from app.models.bim_storey import BimStorey
-from app.services.bim_wall_service import BimWallService
+from app.core.building_rules import DEFAULT_PRICES_CLP, get_full_rules_context
 from app.services.bim_modular_service import BimModularService
+from app.services.bim_wall_service import BimWallService
 from app.services.code_knowledge_service import CodeKnowledgeService
-
 
 # ── Schemas for Claude's structured output ──
 

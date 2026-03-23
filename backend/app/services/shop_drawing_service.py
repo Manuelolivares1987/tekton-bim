@@ -6,27 +6,23 @@ Generates PDF drawings for wall elevations, panel details, and cutting lists.
 import io
 from datetime import datetime
 
+from reportlab.graphics.shapes import Drawing, Line, Rect, String
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch, mm
+from reportlab.lib.pagesizes import landscape, letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
 from reportlab.platypus import (
+    PageBreak,
+    Paragraph,
     SimpleDocTemplate,
+    Spacer,
     Table,
     TableStyle,
-    Paragraph,
-    Spacer,
-    PageBreak,
 )
-from reportlab.graphics.shapes import Drawing, Rect, Line, String, Group
-from reportlab.graphics import renderPDF
-
 from sqlalchemy.orm import Session
 
-from app.models.panelization_result import PanelizationResult, PanelInstance
 from app.models.ifc_element import IfcElement
-from app.models.sip_panel_config import SipPanelConfig
-from app.models.framing_member import FramingMember
+from app.models.panelization_result import PanelizationResult
 
 
 class ShopDrawingService:

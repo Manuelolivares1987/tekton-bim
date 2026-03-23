@@ -9,14 +9,15 @@ The core workflow:
 """
 
 import math
+
 from sqlalchemy.orm import Session
 
-from app.models.bim_wall import BimWall
-from app.models.bim_wall_opening import BimWallOpening
 from app.models.bim_panel import BimPanel
 from app.models.bim_storey import BimStorey
-from app.services.sip_panelization_service import panelize_wall, Opening, PanelData
-from app.services.wood_frame_service import generate_framing, MemberData
+from app.models.bim_wall import BimWall
+from app.models.bim_wall_opening import BimWallOpening
+from app.services.sip_panelization_service import Opening, panelize_wall
+from app.services.wood_frame_service import generate_framing
 
 
 class BimWallService:

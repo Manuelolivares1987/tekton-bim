@@ -2,10 +2,10 @@
 
 from sqlalchemy.orm import Session
 
+from app.core.formulas.insulation import calculate_r_value
+from app.models.material import Material
 from app.models.panel import Panel
 from app.models.panel_layer import PanelLayer
-from app.models.material import Material
-from app.core.formulas.insulation import calculate_r_value
 
 
 class PanelService:

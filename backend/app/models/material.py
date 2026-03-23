@@ -1,5 +1,7 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String, Text
+
 from app.models.base import Base
 
 
@@ -15,4 +17,4 @@ class Material(Base):
     cost_unit = Column(String(20), default="kg")
     description = Column(Text)
     is_volcanic_rock = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
